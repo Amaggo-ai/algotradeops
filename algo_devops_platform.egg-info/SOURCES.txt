@@ -1,0 +1,10 @@
+pyproject.toml
+algo_devops_platform.egg-info/PKG-INFO
+algo_devops_platform.egg-info/SOURCES.txt
+algo_devops_platform.egg-info/dependency_links.txt
+algo_devops_platform.egg-info/top_level.txt
+app/config.py
+app/main.py
+app/metrics.py
+tests/test_backtest.py
+tests/test_strategies.py

@@ -1,0 +1,50 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: trader
+      POSTGRES_PASSWORD: trader
+      POSTGRES_DB: trader
+    ports: ["5432:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trader"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  ohlc-collector:
+    build: .
+    command: python -m app.collectors.ohlc_writer
+    environment:
+      PG_DSN: "dbname=trader user=trader password=trader host=postgres port=5432"
+      SYMBOL: "AAPL"
+      CANDLE_SECONDS: "60"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  trader:
+    build: .
+    environment:
+      MODE: "sim"            # sim|backtest|paper
+      STRATEGY: "sma_cross"  # or mean_reversion
+      SYMBOLS: "AAPL"
+      CASH: "100000"
+    ports: ["8000:8000"]
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./ops/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports: ["9090:9090"]
+    depends_on:
+      - trader
+
+  grafana:
+    image: grafana/grafana:11.1.0
+    # First boot WITHOUT plugins to eliminate plugin download/failures.
+    # We'll install Plotly after Grafana is up.
+    ports: ["3001:3000"]  # host:container
+    depends_on:
+      - prometheus
+      - postgres

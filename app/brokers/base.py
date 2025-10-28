@@ -1,0 +1,9 @@
+from abc import ABC, abstractmethod
+
+class Broker(ABC):
+    @abstractmethod
+    def submit_order(self, symbol, side, qty): ...
+    @abstractmethod
+    def get_positions(self): ...
+    @abstractmethod
+    def get_cash(self): ...

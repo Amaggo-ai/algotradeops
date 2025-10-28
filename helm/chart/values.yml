@@ -1,0 +1,14 @@
+image:
+  repository: <your ECR repo>/algo-devops-platform
+  tag: latest
+env:
+  MODE: "paper"
+  STRATEGY: "sma_cross"
+  SYMBOLS: "AAPL,MSFT"
+  CASH: "100000"
+  ALPACA_KEY: "{{ .Values.secrets.alpacaKey }}"
+  ALPACA_SECRET: "{{ .Values.secrets.alpacaSecret }}"
+service:
+  port: 8000
+prometheus:
+  enabled: true

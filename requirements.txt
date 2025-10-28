@@ -1,0 +1,5 @@
+pandas
+numpy
+prometheus-client
+requests
+psycopg2-binary
